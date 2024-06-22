@@ -47,24 +47,16 @@ def tracks_longer_than(db, duration):
 def genres_with_most_tracks(db):
     query = """
     select 
-        b.name as genre,
-        a.count as count
+        b.name as genre, a.count as count
     from 
-        (
-            select
-                GenreId,
-                count(*) as count
-            from
-                tracks
-            group by
-                GenreId
-        ) as a
-    left join
-        genres as b
-    on
-        a.GenreId = b.GenreId
-    order by
-        a.count desc
+    (
+        select GenreId, count(*) as count
+        from tracks
+        group by GenreId
+    ) as a
+    left join genres as b
+    on a.GenreId = b.GenreId
+    order by a.count desc
     """  # ここにSQLクエリを書いてください
 
     db.execute(query)
