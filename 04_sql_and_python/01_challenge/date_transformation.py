@@ -1,5 +1,6 @@
 import sqlite3
 import pandas as pd
+import re
 
 def transform_date_format(date_str):
     """
@@ -13,7 +14,12 @@ def transform_date_format(date_str):
     文字列: 'DD/MM/YYYY' 形式に変換した日付文字列、または元の文字列 (形式が無効だった場合)
     """
     # 日付形式を変換するロジックを実装してください
-    pass
+    if re.fullmatch("\d{4}-\d{2}-\d{2}", date_str):
+        l = date_str.split("-")
+        l.reverse()
+        return "/".join(l)
+    else:
+        return date_str
 
 def apply_date_transformation(db_path, table_name, column_name):
     """
@@ -31,7 +37,8 @@ def apply_date_transformation(db_path, table_name, column_name):
         # 指定したテーブルをDataFrameに読み込んでください
         # 指定した列にtransform_date_format関数を適用してください
         # 変更後のDataFrameを返してください
-        pass
+        df = pd.read_sql(f"select {column_name} from {table_name}", conn)
+        return df.applymap(transform_date_format)
 
 # 使用例 (受講者はこれを変更してください)
 if __name__ == "__main__":
